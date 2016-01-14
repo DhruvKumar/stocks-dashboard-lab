@@ -224,40 +224,14 @@ Give it some name, eg: Stocks-Dashboard
 
 ## Step 11: Start the Flow and visualize in Banana
 
-### Syntax
+<http://sandbox.hortonworks.com:8983/solr/banana/index.html#/dashboard>
 
-#### Strong and Emphasize 
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/27-banana-dashboard.png)
 
-**strong** or __strong__ ( Cmd + B )
+Email: dkumar[*at*]hortonworks[*dot*]com
 
-*emphasize* or _emphasize_ ( Cmd + I )
 
-**Sometimes I want a lot of text to be bold.
-Like, seriously, a _LOT_ of text**
 
-#### Blockquotes
-
-> Right angle brackets &gt; are used for block quotes.
-
-#### Links and Email
-
-An email <example@example.com> link.
-
-Simple inline link <http://chenluois.com>, another inline link [Smaller](http://25.io/smaller/), one more inline link with title [Resize](http://resizesafari.com "a Safari extension").
-
-A [reference style][id] link. Input id, then anywhere in the doc, define the link with corresponding id:
-
-[id]: http://25.io/mou/ "Markdown editor on Mac OS X"
-
-Titles ( or called tool tips ) in the links are optional.
-
-#### Images
-
-An inline image ![Smaller icon](http://25.io/smaller/favicon.ico "Title here"), title is optional.
-
-A ![Resize icon][2] reference style image.
-
-[2]: http://resizesafari.com/favicon.ico "Title"
 
 #### Inline code and Block code
 
