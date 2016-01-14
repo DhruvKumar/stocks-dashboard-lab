@@ -153,20 +153,20 @@ Go to NiFi UI at <http://sandbox.hortonworks.com:9090/nifi>
 
 Create a new process group by dragging the Process Group icon to the UI:
 
-!()[images/1-process-group.png]
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/1-process-group.png)
 
 Give it some name, eg: Stocks-Dashboard
 
-!()[images/2-create-process-group.png]
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/2-create-process-group.png)
 
-!()[images/3-add-get-http.png]
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/3-add-get-http.png)
 
-!()[images/4-configure-get-http.png]
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/4-configure-get-http.png)
 
 
 ## Step 4: Replace text
 
-!()[images/6-configure-replace-text.png]
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/6-configure-replace-text.png)
 
 
 We will query Google Finance for the following stock symbols prices: `NASDAQ:GOOG,NASDAQ:AAPL,NYSE:GS,NASDAQ:HDP,NASDAQ:RHT,NASDAQ:SBUX`
