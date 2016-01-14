@@ -168,14 +168,61 @@ Give it some name, eg: Stocks-Dashboard
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/6-configure-replace-text.png)
 
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/7-connect-gethttp-replace-text.png)
 
-We will query Google Finance for the following stock symbols prices: `NASDAQ:GOOG,NASDAQ:AAPL,NYSE:GS,NASDAQ:HDP,NASDAQ:RHT,NASDAQ:SBUX`
+## Step 5: Split JSON
 
-The http call for this is:
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/8-configure-split-json.png)
 
-<http://finance.google.com/finance/info?client=ig&q=NASDAQ:GOOG,NASDAQ:AAPL,NYSE:GS,NASDAQ:HDP,NASDAQ:RHT,NASDAQ:SBUX>
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/9-connect-replacetext-splitjson.png)
+
+## Step 6: Evaluate JSON 
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/10-configure-evaluate-json-path.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/11-connect-splitjson-evaluatejsonpath.png)
+
+## Step 7: Update Attributes
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/12-configure-update-attribute.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/13-connect-evaluatejsonpath-updateattribute.png)
+
+## Step 8: Prepare to Push to HBase and Solr
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/14-configure-attribute-json.png)
+
+## Step 9: Push to HBase
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/Archive/15-puthbase-crreate-hbase-client-service.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/Archive/16-puthbase-addhbase-client-service.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/Archive/17-puthbase-clientservice-added.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/Archive/18-puthbase-enable-clientservice.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/Archive/19-puthbase-configure-client-service.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/20-puthbase-self-connection.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/21-puthbase-self-connected-result.png)
 
 
+
+## Step 10: Push to Solr
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/22-configure-sendto-solr.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/23-configure-sendto-solr.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/24-configure-sendto-solr.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/25-connect-attributes-to-json-send-to-solr.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/26-configure-logger.png)
+
+## Step 11: Start the Flow and visualize in Banana
 
 ### Syntax
 
