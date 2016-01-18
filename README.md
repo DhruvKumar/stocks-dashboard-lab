@@ -15,6 +15,8 @@ This lab will teach you how to use Hortonworks Data Platform and NiFi to monitor
 
 This is a typical Internet of Anything (IoAT) end-to-end application. The goal is to get you familiar with the components of HDP and HDF and show how easy it is to create such beautiful apps with hardly any code.
 
+Note: this lab will only work during US Stock market's operating hours: 9.30 AM to 4.30 PM Eastern Time.
+
 ## Step 1: Download and install the HDP Sandbox
 
 Download and install the HDP 2.3 Sandbox on your laptop by following these instructions:
