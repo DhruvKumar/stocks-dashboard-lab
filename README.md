@@ -381,7 +381,7 @@ Let's push to Solr by using the `SendToSolr` processor. Configure it as shown in
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/23-configure-sendto-solr.png)
 
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/24-configure-sendto-solr.png)
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/24-configure-send-to-solr.png)
 
 What have we done? We've already created a collection in Solr before, and we're now configuring the processor to send the attributes to their matching fields in the Solr collection.
 
