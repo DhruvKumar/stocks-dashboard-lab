@@ -149,6 +149,130 @@ We're now ready to use NiFi and create the flow.
 
 ## Step 3: Fetch stock prices from Google Finance 
 
+We will use Google's Finance API to pull stock quotes. While the API has been officially deprecated, you can still issue a http call to Google Finance with stock symbols as query arguments and get the info back. Our http call will be for `GOOG`, `AAPL`, `GS`, `HDP`, `RHT` and `SBUX` quotes:
+
+```
+http://finance.google.com/finance/info?client=ig&q=NASDAQ:GOOG,NASDAQ:AAPL,NYSE:GS,NASDAQ:HDP,NASDAQ:RHT,NASDAQ:SBUX
+```
+
+Try to copy-paste this in your browser and you should get (invalid) JSON back:
+
+```
+// [ { "id": "304466804484872" ,"t" : "GOOG" ,"e" : "NASDAQ" ,"l" : "694.45" ,"l_fix" : "694.45" ,"l_cur" : "694.45" ,"s": "0" ,"ltt":"4:00PM EST" ,"lt" : "Jan 15, 4:00PM EST" ,"lt_dts" : "2016-01-15T16:00:02Z" ,"c" : "-20.27" ,"c_fix" : "-20.27" ,"cp" : "-2.84" ,"cp_fix" : "-2.84" ,"ccol" : "chr" ,"pcls_fix" : "714.72" } ,{ "id": "22144" ,"t" : "AAPL" ,"e" : "NASDAQ" ,"l" : "97.05" ,"l_fix" : "97.05" ,"l_cur" : "97.05" ,"s": "0" ,"ltt":"4:00PM EST" ,"lt" : "Jan 15, 4:00PM EST" ,"lt_dts" : "2016-01-15T16:00:01Z" ,"c" : "-2.47" ,"c_fix" : "-2.47" ,"cp" : "-2.48" ,"cp_fix" : "-2.48" ,"ccol" : "chr" ,"pcls_fix" : "99.52" } ,{ "id": "663137" ,"t" : "GS" ,"e" : "NYSE" ,"l" : "155.64" ,"l_fix" : "155.64" ,"l_cur" : "155.64" ,"s": "0" ,"ltt":"7:53PM EST" ,"lt" : "Jan 15, 7:53PM EST" ,"lt_dts" : "2016-01-15T19:53:40Z" ,"c" : "-5.75" ,"c_fix" : "-5.75" ,"cp" : "-3.56" ,"cp_fix" : "-3.56" ,"ccol" : "chr" ,"pcls_fix" : "161.39" } ,{ "id": "542031669134556" ,"t" : "HDP" ,"e" : "NASDAQ" ,"l" : "16.57" ,"l_fix" : "16.57" ,"l_cur" : "16.57" ,"s": "0" ,"ltt":"4:00PM EST" ,"lt" : "Jan 15, 4:00PM EST" ,"lt_dts" : "2016-01-15T16:00:01Z" ,"c" : "-0.64" ,"c_fix" : "-0.64" ,"cp" : "-3.72" ,"cp_fix" : "-3.72" ,"ccol" : "chr" ,"pcls_fix" : "17.21" } ,{ "id": "655693" ,"t" : "SBUX" ,"e" : "NASDAQ" ,"l" : "58.00" ,"l_fix" : "58.00" ,"l_cur" : "58.00" ,"s": "0" ,"ltt":"4:00PM EST" ,"lt" : "Jan 15, 4:00PM EST" ,"lt_dts" : "2016-01-15T16:00:01Z" ,"c" : "-0.98" ,"c_fix" : "-0.98" ,"cp" : "-1.66" ,"cp_fix" : "-1.66" ,"ccol" : "chr" ,"pcls_fix" : "58.98" } ]
+```
+
+After a little clean up and converting it to valid JSON by hand (why was it invalid and what was the cleanup?), it looks like:
+
+```
+{
+  "data": [
+    {
+      "id": "304466804484872",
+      "t": "GOOG",
+      "e": "NASDAQ",
+      "l": "694.45",
+      "l_fix": "694.45",
+      "l_cur": "694.45",
+      "s": "0",
+      "ltt": "4:00PM EST",
+      "lt": "Jan 15, 4:00PM EST",
+      "lt_dts": "2016-01-15T16:00:02Z",
+      "c": "-20.27",
+      "c_fix": "-20.27",
+      "cp": "-2.84",
+      "cp_fix": "-2.84",
+      "ccol": "chr",
+      "pcls_fix": "714.72"
+    },
+    {
+      "id": "22144",
+      "t": "AAPL",
+      "e": "NASDAQ",
+      "l": "97.05",
+      "l_fix": "97.05",
+      "l_cur": "97.05",
+      "s": "0",
+      "ltt": "4:00PM EST",
+      "lt": "Jan 15, 4:00PM EST",
+      "lt_dts": "2016-01-15T16:00:01Z",
+      "c": "-2.47",
+      "c_fix": "-2.47",
+      "cp": "-2.48",
+      "cp_fix": "-2.48",
+      "ccol": "chr",
+      "pcls_fix": "99.52"
+    },
+    {
+      "id": "663137",
+      "t": "GS",
+      "e": "NYSE",
+      "l": "155.64",
+      "l_fix": "155.64",
+      "l_cur": "155.64",
+      "s": "0",
+      "ltt": "7:53PM EST",
+      "lt": "Jan 15, 7:53PM EST",
+      "lt_dts": "2016-01-15T19:53:40Z",
+      "c": "-5.75",
+      "c_fix": "-5.75",
+      "cp": "-3.56",
+      "cp_fix": "-3.56",
+      "ccol": "chr",
+      "pcls_fix": "161.39"
+    },
+    {
+      "id": "542031669134556",
+      "t": "HDP",
+      "e": "NASDAQ",
+      "l": "16.57",
+      "l_fix": "16.57",
+      "l_cur": "16.57",
+      "s": "0",
+      "ltt": "4:00PM EST",
+      "lt": "Jan 15, 4:00PM EST",
+      "lt_dts": "2016-01-15T16:00:01Z",
+      "c": "-0.64",
+      "c_fix": "-0.64",
+      "cp": "-3.72",
+      "cp_fix": "-3.72",
+      "ccol": "chr",
+      "pcls_fix": "17.21"
+    },
+    {
+      "id": "655693",
+      "t": "SBUX",
+      "e": "NASDAQ",
+      "l": "58.00",
+      "l_fix": "58.00",
+      "l_cur": "58.00",
+      "s": "0",
+      "ltt": "4:00PM EST",
+      "lt": "Jan 15, 4:00PM EST",
+      "lt_dts": "2016-01-15T16:00:01Z",
+      "c": "-0.98",
+      "c_fix": "-0.98",
+      "cp": "-1.66",
+      "cp_fix": "-1.66",
+      "ccol": "chr",
+      "pcls_fix": "58.98"
+    }
+  ]
+}
+```
+
+For each symbol, we get its real time value, percent change, etc. The fields of our interest are:
+
+| Attribute		| Description 			|
+| ------------ 	| ---------------------	| 
+| t				| symbol 				|
+| l_fix 		| price					| 
+| c_fix			| absolute price change	|
+| cp_fix 		| percent price change	| 
+| lt 			| timestamp				|
+
+Our goal is to extract these attribute values from a http response, index them into Solr and visualize them in Banana. Let's begin.
+
+
 Go to NiFi UI at <http://sandbox.hortonworks.com:9090/nifi>
 
 Create a new process group by dragging the Process Group icon to the UI:
@@ -159,40 +283,144 @@ Give it some name, eg: Stocks-Dashboard
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/2-create-process-group.png)
 
+Find the Processor Icon present in the top toolbar. It is the first icon in the toolbar. Drag and drop the processor icon to the workspace and search for "GetHTTP" processor:
+
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/3-add-get-http.png)
+
+Click add to add it to the Process Group. Next, right click on the GetHTTP processor just added and go to "configure":
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/4-configure-get-http.png)
 
+Here, you can customize the processor for fetching data from Google Finance. Go to the "properties" section and edit the URL to point to:
+
+```
+http://finance.google.com/finance/info?client=ig&q=NASDAQ:GOOG,NASDAQ:AAPL,NYSE:GS,NASDAQ:HDP,NASDAQ:RHT,NASDAQ:SBUX
+```
+
+Set the Filename property to `${UUID()}` This will cause each downloaded file to be named by a UUID. 
+
+Next, let's clean up the json.
 
 ## Step 4: Replace text
 
+The http call to Google finance returns JSON text like this:
+
+```
+// [ { "id": "304466804484872" ,"t" : "GOOG" ,"e" : "NASDAQ" ,"l" : ....
+```
+
+Let's remove the leading comment marker `//` from the returned response using the `ReplaceText` processor. Add the processor and configure it to search for the comment and replace it by an empty string like this:
+
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/6-configure-replace-text.png)
+
+Now let's connect the `GetHTTP` processor you to the `ReplaceText` processor. For creating connections in NiFi, hover the mouse on the leading processor's center until you see a circle-arrow icon. Next, click and drag the line to the following processor you wish to connect. Once connected, configure the connection. In this case, we want the `FlowFile` emanating from `GetHTTP` to go to `ReplaceText` only on successful download. Hence, we configure the connection for "success":
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/7-connect-gethttp-replace-text.png)
 
-## Step 5: Split JSON
+## Step 5: Split JSON to attributes
+
+Now we have the raw JSON without the leading comment. Let's split it into its attributes so we can do downstream processing easily. Use the `SplitJSON` processor for it. The API docs of `SplitJSON` clearly mention what is going on (you can see the documentation for any processor by right-clicking the processor and selecting "usage" from the pop-up menu):
+
+```
+Splits a JSON File into multiple, separate FlowFiles for an array element specified by a JsonPath expression. Each generated FlowFile is comprised of an element of the specified array and transferred to relationship 'split,' with the original file transferred to the 'original' relationship. If the specified JsonPath is not found or does not evaluate to an array element, the original file is routed to 'failure' and no files are generated.
+```
+
+Hence we see that this processor uses `JsonPath` expressions to define the parsing criteria. For us, the job is simple -- we need to split the array of JSON returned by Google into its individual elements. Hence, let's match the entire array using the expression `$.*` and configure it as follows:
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/8-configure-split-json.png)
 
+Connect the `ReplaceText` processor with `SplitJSON` for a successful match:
+
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/9-connect-replacetext-splitjson.png)
 
-## Step 6: Evaluate JSON 
+## Step 6: Extract fields from JSON
+
+We have the split JSON with us, but we need to extract the attributes of interest to us. Recall that we want to index the following attributes:
+
+| Attribute		| Description 			|
+| ------------ 	| ---------------------	| 
+| t				| symbol 				|
+| l_fix 		| price					| 
+| c_fix			| absolute price change	|
+| cp_fix 		| percent price change	| 
+| lt 			| timestamp				| 
+
+In order to do this, use the `EvaluateJsonPath` processor and configure it as shown in the picture below. You'll need to add new properties in the config pop-up and assign them these key-value pairs:
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/10-configure-evaluate-json-path.png)
 
+Connect the `SplitJSON` with this processor:
+
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/11-connect-splitjson-evaluatejsonpath.png)
 
-## Step 7: Update Attributes
+## Step 7: Fix timestamp
+
+In order to work with Banana dashboard and Solr, we need to massage the date-time a little bit. Use the `UpdateAttribute` processor for this. In the processor's configuration, add a new property called "fixed_ts"
+
+```
+${ts:prepend(${now():format("yyyy ")}):toDate("yyyy MMM dd',' hh:mma z"):format("yyyy-MM-dd HH:mm:ssZ")}
+```
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/12-configure-update-attribute.png)
 
+Create a connection between `EvaluateJsonPath` and this processor for a "matched" relationship:
+
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/13-connect-evaluatejsonpath-updateattribute.png)
 
-## Step 8: Prepare to Push to HBase and Solr
+## Step 8: Convert attributes to JSON for Solr
+
+We're now almost ready to push the flow into Solr. But before we do that, we need to convert the attributes into JSON as Solr accepts JSON via REST. Let's use the `AttributesToJson` processor for it. Keep the "Attributes List" property empty in its configuration so that it converts all attribute-value pairs to JSON (we're only using the fields of interest at this stage and have discarded others): 
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/14-configure-attribute-json.png)
 
-## Step 9: Push to HBase
+## Step 9: Push to Solr
+
+Let's push to Solr by using the `SendToSolr` processor. Configure it as shown in the next three diagrams:
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/22-configure-sendto-solr.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/23-configure-sendto-solr.png)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/24-configure-sendto-solr.png)
+
+What have we done? We've already created a collection in Solr before, and we're now configuring the processor to send the attributes to their matching fields in the Solr collection.
+
+Let's connect the processors:
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/25-connect-attributes-to-json-send-to-solr.png)
+
+For debugging, let's also throw in a logger processor:
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/26-configure-logger.png)
+
+## Step 10: Start the Flow and visualize in Banana
+
+We're all set now. Click on "play" icon on the toolbar (it should be a green arrow), and wait for a few minutes. Go to the Banana UI to visualize the flow:
+
+<http://sandbox.hortonworks.com:8983/solr/banana/index.html#/dashboard>
+
+You should see something like this: (play around with the time scale to view the chart in greater detail)
+
+![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/27-banana-dashboard.png)
+
+
+This completes the lab. For any feedback/questions, email me at:
+
+Email: dkumar[*at*]hortonworks[*dot*]com
+
+## Special Thanks:
+
+* [Ali Bajwa](https://github.com/abajwa-hw) for the NiFi service
+* Vladimir Zatkin for coming up with the original NiFi flow
+
+
+***
+***
+
+
+## Extra Credit: Push to HBase
+
+HBase is a fast store often used in IoT architectures for enriching the incoming event stream with additional context, and also to store the results of stream analysis. For extra credit, you can add an additional processor to dump to HBase. Follow these pictures to do that:
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/Archive/15-puthbase-crreate-hbase-client-service.png)
 
@@ -208,169 +436,4 @@ Give it some name, eg: Stocks-Dashboard
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/21-puthbase-self-connected-result.png)
 
-
-
-## Step 10: Push to Solr
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/22-configure-sendto-solr.png)
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/23-configure-sendto-solr.png)
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/24-configure-sendto-solr.png)
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/25-connect-attributes-to-json-send-to-solr.png)
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/26-configure-logger.png)
-
-## Step 11: Start the Flow and visualize in Banana
-
-<http://sandbox.hortonworks.com:8983/solr/banana/index.html#/dashboard>
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/27-banana-dashboard.png)
-
-Email: dkumar[*at*]hortonworks[*dot*]com
-
-
-
-
-####  Ordered Lists
-
-Ordered lists are created using "1." + Space:
-
-1. Ordered list item
-2. Ordered list item
-3. Ordered list item
-
-#### Unordered Lists
-
-Unordered list are created using "*" + Space:
-
-* Unordered list item
-* Unordered list item
-* Unordered list item 
-
-Or using "-" + Space:
-
-- Unordered list item
-- Unordered list item
-- Unordered list item
-
-#### Hard Linebreak
-
-End a line with two or more spaces will create a hard linebreak, called `<br />` in HTML. ( Control + Return )  
-Above line ended with 2 spaces.
-
-#### Horizontal Rules
-
-Three or more asterisks or dashes:
-
 ***
-
----
-
-- - - -
-
-
-
-
-#### Tables
-
-A simple table looks like this:
-
-First Header | Second Header | Third Header
------------- | ------------- | ------------
-Content Cell | Content Cell  | Content Cell
-Content Cell | Content Cell  | Content Cell
-
-If you wish, you can add a leading and tailing pipe to each line of the table:
-
-| First Header | Second Header | Third Header |
-| ------------ | ------------- | ------------ |
-| Content Cell | Content Cell  | Content Cell |
-| Content Cell | Content Cell  | Content Cell |
-
-Specify alignment for each column by adding colons to separator lines:
-
-First Header | Second Header | Third Header
-:----------- | :-----------: | -----------:
-Left         | Center        | Right
-Left         | Center        | Right
-
-
-### Shortcuts
-
-#### View
-
-* Toggle live preview: Shift + Cmd + I
-* Toggle Words Counter: Shift + Cmd + W
-* Toggle Transparent: Shift + Cmd + T
-* Toggle Floating: Shift + Cmd + F
-* Left/Right = 1/1: Cmd + 0
-* Left/Right = 3/1: Cmd + +
-* Left/Right = 1/3: Cmd + -
-* Toggle Writing orientation: Cmd + L
-* Toggle fullscreen: Control + Cmd + F
-
-#### Actions
-
-* Copy HTML: Option + Cmd + C
-* Strong: Select text, Cmd + B
-* Emphasize: Select text, Cmd + I
-* Inline Code: Select text, Cmd + K
-* Strikethrough: Select text, Cmd + U
-* Link: Select text, Control + Shift + L
-* Image: Select text, Control + Shift + I
-* Select Word: Control + Option + W
-* Select Line: Shift + Cmd + L
-* Select All: Cmd + A
-* Deselect All: Cmd + D
-* Convert to Uppercase: Select text, Control + U
-* Convert to Lowercase: Select text, Control + Shift + U
-* Convert to Titlecase: Select text, Control + Option + U
-* Convert to List: Select lines, Control + L
-* Convert to Blockquote: Select lines, Control + Q
-* Convert to H1: Cmd + 1
-* Convert to H2: Cmd + 2
-* Convert to H3: Cmd + 3
-* Convert to H4: Cmd + 4
-* Convert to H5: Cmd + 5
-* Convert to H6: Cmd + 6
-* Convert Spaces to Tabs: Control + [
-* Convert Tabs to Spaces: Control + ]
-* Insert Current Date: Control + Shift + 1
-* Insert Current Time: Control + Shift + 2
-* Insert entity <: Control + Shift + ,
-* Insert entity >: Control + Shift + .
-* Insert entity &: Control + Shift + 7
-* Insert entity Space: Control + Shift + Space
-* Insert Scriptogr.am Header: Control + Shift + G
-* Shift Line Left: Select lines, Cmd + [
-* Shift Line Right: Select lines, Cmd + ]
-* New Line: Cmd + Return
-* Comment: Cmd + /
-* Hard Linebreak: Control + Return
-
-#### Edit
-
-* Auto complete current word: Esc
-* Find: Cmd + F
-* Close find bar: Esc
-
-#### Post
-
-* Post on Scriptogr.am: Control + Shift + S
-* Post on Tumblr: Control + Shift + T
-
-#### Export
-
-* Export HTML: Option + Cmd + E
-* Export PDF:  Option + Cmd + P
-
-
-### And more?
-
-Don't forget to check Preferences, lots of useful options are there.
-
-Follow [@Mou](https://twitter.com/mou) on Twitter for the latest news.
-
-For feedback, use the menu `Help` - `Send Feedback`
