@@ -385,13 +385,10 @@ Let's push to Solr by using the `SendToSolr` processor. Configure it as shown in
 
 What have we done? We've already created a collection in Solr before, and we're now configuring the processor to send the attributes to their matching fields in the Solr collection.
 
-Let's connect the processors:
+Connect the processors, and also self-connect `SendToSolr` processor for "failure" relationship:
 
 ![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/25-connect-attributes-to-json-send-to-solr.png)
 
-For debugging, let's also throw in a logger processor:
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/26-configure-logger.png)
 
 ## Step 10: Start the Flow and visualize in Banana
 
@@ -415,25 +412,4 @@ Email: dkumar[*at*]hortonworks[*dot*]com
 
 
 ***
-***
-
-
-## Extra Credit: Push to HBase
-
-HBase is a fast store often used in IoT architectures for enriching the incoming event stream with additional context, and also to store the results of stream analysis. For extra credit, you can add an additional processor to dump to HBase. Follow these pictures to do that:
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/Archive/15-puthbase-crreate-hbase-client-service.png)
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/Archive/16-puthbase-addhbase-client-service.png)
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/Archive/17-puthbase-clientservice-added.png)
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/Archive/18-puthbase-enable-clientservice.png)
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/Archive/19-puthbase-configure-client-service.png)
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/20-puthbase-self-connection.png)
-
-![](https://raw.githubusercontent.com/DhruvKumar/stocks-dashboard-lab/master/images/21-puthbase-self-connected-result.png)
-
 ***
